@@ -116,7 +116,7 @@ app.post('/api/chat', async (req, res) => {
 
     const response = await axios.request(createAxiosConfig(requestData, req));
     const responseTime = ((Date.now() - startTime) / 1000).toFixed(1);
-    const aiResponse = extractAIResponse(response.data);
+    const aiResponse = extractAIResponse(response.data).replace(/blackbox\.ai/gi, 'Ron AI');;
 
     const updatedHistory = [...messages, {
       content: aiResponse,

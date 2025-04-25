@@ -5,6 +5,8 @@ const cors = require('cors');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+const path = require('path');
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
 app.use(bodyParser.json({ limit: '10mb' }));
 
@@ -161,6 +163,9 @@ app.use((err, req, res, next) => {
   });
 });
 
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public/index.html'));
+});
 // Start the server
 app.listen(PORT, () => {
   console.log(`Server running on http://77.238.239.154:${PORT}`);

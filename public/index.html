@@ -1,0 +1,93 @@
+<!-- public/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Ron Chat API Tester</title>
+  <style>
+    body {
+      background-color: #0f0f0f;
+      color: #00ff99;
+      font-family: 'Courier New', Courier, monospace;
+      padding: 30px;
+    }
+    h1 {
+      color: #00ffff;
+      text-shadow: 0 0 5px #00ffff;
+    }
+    textarea, select, input {
+      width: 100%;
+      background-color: #1a1a1a;
+      border: 1px solid #00ff99;
+      color: #00ff99;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+    button {
+      background-color: #00ff99;
+      color: black;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    pre {
+      background: #111;
+      padding: 15px;
+      border-left: 4px solid #00ff99;
+      margin-top: 20px;
+      white-space: pre-wrap;
+      color: #eee;
+    }
+  </style>
+</head>
+<body>
+  <h1>Ron Chat API Demo</h1>
+
+  <label>Message:</label>
+  <textarea id="messageBox" rows="5">{"role":"user","content":"Hello, who are you?"}</textarea>
+
+  <label>Model:</label>
+  <select id="modelSelect">
+    <option value="meta-llama/Llama-3.3-70B-Instruct-Turbo">Meta-Llama-3.3-70B</option>
+    <option value="deepseek-chat">DeepSeek-V3</option>
+    <option value="deepseek-reasoner">DeepSeek-R1</option>
+    <option value="deepseek-ai/deepseek-llm-67b-chat">DeepSeek-LLM-67B</option>
+  </select>
+
+  <label>Chat ID (optional):</label>
+  <input id="chatId" placeholder="e.g. RonX_001" />
+
+  <button onclick="sendChat()">Send</button>
+
+  <pre id="responseBox">Waiting for response...</pre>
+
+  <script>
+    async function sendChat() {
+      const msg = document.getElementById("messageBox").value;
+      const model = document.getElementById("modelSelect").value;
+      const chatId = document.getElementById("chatId").value;
+      const body = {
+        messages: [JSON.parse(msg)],
+        modelId: model,
+        chatId: chatId || "RonChat"
+      };
+
+      document.getElementById("responseBox").innerText = "Sending...";
+
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+
+      const data = await res.json();
+      document.getElementById("responseBox").innerText = JSON.stringify(data, null, 2);
+    }
+  </script>
+</body>
+</html>
